@@ -1,5 +1,6 @@
 #include "Hline.hpp"
 #include "Point.hpp"
+
 int main(int argc, char **argv)
 {
     Point origin = Point(0,0);
