@@ -9,6 +9,7 @@ class Curvebase{ //ABSTRACT CLASS, NEEDS TO BE INHERITED
 		double y(double);
 		virtual ~Curvebase(); // -> destructor always has to be virtual
 		
+		
 	protected: //Exposed to derived classes but not to other classes
 		double pmin, pmax;
 		Point begin, end;
