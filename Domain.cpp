@@ -28,20 +28,21 @@ Point Domain::operator()(int i, int j) const {
 	return Point(x_[ind],y_[ind]);
 }
 	
-// void Domain::generate_grid(int m, int n){
-// 	if(m<1 or n<1) 
-// 		// throw error
-// 	if(m_>0 or n_>0) {
-// 		delete [] x_;
-// 		delete [] y_;
-// 	}
-// 	x_ = new double[(m+1)*(n+1)]; 
-// 	y_ = new double[(m+1)*(n+1)];
-// 	m_ = m, n_= n;
-// 	double h1 = 1.0/n, h2 = 1.0/m; // (FORCE FLOATING POINT DIVISION)
-// 	for(int i; i<=n; ++i){ //Vertical index, indicates the row
-// 		for(int j; j<=m; ++j){ //Horizontal index, indicates the column
-// 			x_[i+j*(n+1)]=phi1(i*h1)*side[3]->x(j*h2)+phi2(i*h1)*side[1]->x(j*h2);// implement 5.26
-// 		}
-// 	}
-// }
+void Domain::generate_grid(int m, int n){
+	if(m<1 or n<1) 
+		// throw error
+	if(m_>0 or n_>0) { //if previous grid exists, reset grid points
+		delete [] x_;
+		delete [] y_;
+	}
+	x_ = new double[(m+1)*(n+1)]; 
+	y_ = new double[(m+1)*(n+1)];
+	m_ = m, n_= n;
+	double hx(1.0/n), hy(1.0/m); // (FORCE FLOATING POINT DIVISION)
+	for(int i; i<=n; ++i){ //Vertical index, indicates the row
+		for(int j; j<=m; ++j){ //Horizontal index, indicates the column
+			x_[i+j*(n+1)]=phi1(i*hx)*side[3]->x(j*hy)+phi2(i*hx)*side[1]->x(j*hy);// implement 5.26
+			y_[i+j*(n+1)]=phi1(i*hy)*side[3]->x(j*hx)+phi2(i*hx)*side[1]->x(j*hy);
+		}
+	}
+}

@@ -24,7 +24,7 @@ double Curvebase::integrand(double q){
     return sqrt(pow(dxp(q),2)+pow(dyp(q),2));
 }
 
-double Curvebase::ASI_routine(ASI_fkt f, double a, double b, double  c, double tol, double fa, double fb, double fc, double I1){
+double Curvebase::ASI_routine(fctn f, double a, double b, double  c, double tol, double fa, double fb, double fc, double I1){
     //Calculate the midpoints
     double ab = (a+b)/2, bc = (b+c)/2;
     //Evaluate the midpoints
@@ -52,7 +52,7 @@ inline double Curvebase::simp(double fa,double fb,double fc,double a,double c)
     return (fa+4*fb+fc)*(c-a)/6;
 }
 
-double Curvebase::newton(ASI_fkt f, ASI_fkt df, double guess, double tol = 1e-12){
+double Curvebase::newton(fctn f, fctn df, double guess, double tol = 1e-12){
     double x0(guess);
     double dx(guess);
     int i(0);
@@ -68,3 +68,20 @@ double Curvebase::newton(ASI_fkt f, ASI_fkt df, double guess, double tol = 1e-12
     }
     return x0;
 }
+
+double Curvebase::x(double s){
+    double guess((pmin+pmax)/s);
+    double p0;
+    if (rev) p0 = newton(yp, dyp,1.0-s, guess);
+    else p0 = newton(xp, dxp,s,guess);
+    return xp(p0);
+}
+
+double Curvebase::y(double s){
+    double guess((pmin+pmax)/s);
+    double p0;
+    if (rev) p0 = newton(yp, dyp,1.0-s, guess);
+    else p0 = newton(yp, dyp,s,guess);
+    return yp(p0);
+}
+

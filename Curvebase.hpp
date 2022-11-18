@@ -4,7 +4,9 @@
 #include "Point.hpp"
 // #include "ASI.hpp"
 
-typedef std::function<double(double)> ASI_fkt;
+typedef std::function<double(double)> fctn;
+
+//typedef double (*fctn)(double);
 
 class Curvebase{ //ABSTRACT CLASS, NEEDS TO BE INHERITED
 	public:
@@ -23,10 +25,10 @@ class Curvebase{ //ABSTRACT CLASS, NEEDS TO BE INHERITED
 		double integrate(double); // arc length integral, has to be defined in base class, can be overwritten i guess?
 	
 	private:
-		double ASI_routine(ASI_fkt, double, double, double, double, double, double, double, double);
+		double ASI_routine(fctn, double, double, double, double, double, double, double, double);
 		double integrand(double); //Function to go in the integral of the standard definition of integrate
 		double simp(double,double,double,double,double);
-		double newton(ASI_fkt, ASI_fkt, double, double);
+		double newton(fctn, fctn, double, double);
 };
 
 #include "Curvebase.cpp"

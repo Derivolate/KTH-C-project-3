@@ -13,10 +13,8 @@ class Domain{
 	private:
 		Curvebase *sides[4];
 		Point *corners[4];
-        double *x_, *y_;
-        int n_, m_;
-		// double *x_, *y_ =nullptr // dynamically allocated arrays for grid points
-		// int n_, m_ =0-> saves dimensons of the grid
+        double *x_ = nullptr, *y_ = nullptr;
+        int n_ = 0, m_ = 0;
 		bool check_consistency(); //Check if the grid is topologically equivalent to a square
 		// ...
 };
