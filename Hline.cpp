@@ -1,25 +1,24 @@
 #include "Hline.hpp"
 //A horizontal curve running from p = a to p = b, to the right (dir = true) or to left (dir = false) starting at Point begin running for length len
-Hline::Hline(double a, double b, bool dir, Point begin, double len) : pmin(a), pmax(b), begin(begin), rev(dir){
-    end = Point(begin.X(), begin.Y()+len);
-}
-Hline::~Hline(){
+Hline::Hline(double a, double b, bool dir, double x, double y, double len) : pmin(a), pmax(b), bx(x), by(y), length(len), rev(dir), ey(y), ex(x+len){}
 
+Hline::~Hline(){
+//TODO what needs to happen here?
 }
 double Hline::xp(double p){
     if (~(pmin<=p and p<=pmax)){}
         //throw error
-    return begin.X()+(p-pmin)*(end.X()-begin.X())/(pmax-pmin);
+    return bx+(p-pmin)*(ex-bx)/(pmax-pmin);
 }
 double Hline::yp(double p){
     if (~(pmin<=p and p<=pmax)){}
         //throw error
-    return begin.Y();
+    return by;
 }
 double Hline::dxp(double p){
     if (~(pmin<=p and p<=pmax)){}
         //throw error
-    return (end.X()-begin.X())/(pmax-pmin);
+    return (ex-bx)/(pmax-pmin);
 }
 double Hline::dyp(double p){
     return 0;

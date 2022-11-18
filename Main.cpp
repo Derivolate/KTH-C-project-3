@@ -3,6 +3,6 @@
 
 int main(int argc, char **argv)
 {
-    Point origin = Point(0,0);
-    Hline border1 = Hline(0,2,true,origin,2);
+    // Point origin = Point(0,0);
+    Hline border1 = Hline(0,2,true,1,1,3);
 }
