@@ -1,4 +1,5 @@
 #include "Vline.hpp"
+
 //A horizontal curve running from p = a to p = b, to the right (dir = true) or to left (dir = false) starting at Point begin running for length len
 Vline::Vline(double a, double b, bool dir, double x, double y, double len) : pmin(a), pmax(b), bx(x), by(y), length(len), rev(dir), ex(x), ey(y+len){}
 

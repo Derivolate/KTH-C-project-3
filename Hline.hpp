@@ -2,7 +2,7 @@
 #define HLINE_HPP
 #include "Curvebase.hpp"
 
-class Hline : Curvebase{
+class Hline : public Curvebase{
     public :
         Hline(double, double, bool, double, double, double);
         ~Hline();

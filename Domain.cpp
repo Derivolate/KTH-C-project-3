@@ -1,17 +1,19 @@
 #include "Domain.hpp"
 #include "Curvebase.hpp"
 #include <cmath>
-
-// Domain::Domain(const Curvebase& s1, const Curvebase& s2, const Curvebase& s3, const Curvebase& s4) {
-// 	sides[0] = &s1;
-// 	sides[1] = &s2;
-// 	sides[2] = &s3;
-// 	sides[3] = &s4;
-// 	if (~check_consistency()) //If thegrid is not consistent, unassign them, why not throw error?
-// 		sides[0] = sides[1] = sides[2] = sides[3] = nullptr;
-// 	m_ = n_ = 0;
-// 	x_ = y_ = nullptr;
-// }
+#include <iostream>
+Domain::Domain(Curvebase& s1, Curvebase& s2, Curvebase& s3, Curvebase& s4) {
+	sides[0] = &s1;
+	sides[1] = &s2;
+	sides[2] = &s3;
+	sides[3] = &s4;
+	//TODO consistency check
+	// if (~check_consistency()) 
+	// 	std::cout << "Grid is inconsistent" << std::endl;
+		// sides[0] = sides[1] = sides[2] = sides[3] = nullptr; //If thegrid is not consistent, unassign them, why not throw error?
+	m_ = n_ = 0;
+	x_ = y_ = nullptr;
+}
 
 
 Domain::~Domain() {
@@ -32,7 +34,7 @@ Point Domain::operator()(int i, int j) const {
 double Domain::phi1(double q){return 1-q;}
 double Domain::phi2(double q){return q;}
 	
-void Domain::generate_grid(int m, int n, int c){
+void Domain::generate_grid(int m, int n, int c = 1){
 	if(m<1 or n<1) 
 		// throw error
 	if(m_>0 or n_>0) { //if previous grid exists, reset grid points
@@ -41,12 +43,14 @@ void Domain::generate_grid(int m, int n, int c){
 	}
 	x_ = new double[(m+1)*(n+1)]; 
 	y_ = new double[(m+1)*(n+1)];
+	double xi, nu;
 	m_ = m, n_= n;
 	double h1(1.0/n), h2(1.0/m); // (FORCE FLOATING POINT DIVISION)
-	for(int i; i<=n; ++i){ //Vertical index, indicates the row
-		for(int j; j<=m; ++j){ //Horizontal index, indicates the column
-			if (c == 1) double xi(i*h1),nu(j*h2); // equidistant s
-			else if (c==2) double xi(1+(tanh(3)*((i*h1)-1))/tanh(3)),nu(1+(tanh(3)*((j*h2)-1))/tanh(3)); // stretched s position Task 5
+	for(int i = 0; i<=n; ++i){ //Vertical index, indicates the row
+		for(int j = 0; j<=m; ++j){ //Horizontal index, indicates the column
+			double xi(i*h1), nu(j*h2);
+			// if (c == 1) {double xi(i*h1),nu(j*h2); // equidistant s
+			// else if (c==2) double xi(1+(tanh(3)*((i*h1)-1))/tanh(3)),nu(1+(tanh(3)*((j*h2)-1))/tanh(3)); // stretched s position Task 5
 			x_[i+j*(n+1)]=phi1(xi)*sides[3]->x(nu)+phi2(xi)*sides[1]->x(nu)
 						+ phi1(nu)*sides[0]->x(xi) + phi2(nu)*sides[2]->x(xi)
 						- phi1(xi)*phi1(nu)*sides[0]->x(0)
@@ -59,6 +63,16 @@ void Domain::generate_grid(int m, int n, int c){
 						- phi1(xi)*phi2(nu)*sides[3]->y(1)
 						- phi2(xi)*phi1(nu)*sides[2]->y(0)
 						- phi2(xi)*phi2(nu)*sides[1]->y(1);
+		}
+	}
+}
+
+void Domain::print_grid(){
+	int ind;
+	for(int i = 0; i<=n_; ++i){
+		for(int j = 0; j<=m_; ++j){
+			ind = j+i*(n_+1);
+			std::cout << "(" << x_[ind] << ",  " << y_[ind] << ")" << std::endl;
 		}
 	}
 }

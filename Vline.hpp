@@ -1,8 +1,8 @@
-#ifndef VLNIE_HPP
+#ifndef VLINE_HPP
 #define VLINE_HPP
 #include "Curvebase.hpp"
 
-class Vline : Curvebase{
+class Vline : public Curvebase{
     public :
         Vline(double, double, bool, double, double, double);
         ~Vline();

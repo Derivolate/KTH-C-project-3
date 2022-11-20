@@ -4,12 +4,13 @@
 #include "Point.hpp"
 class Domain{
 	public:
-		Domain(const Curvebase&, const Curvebase&, const Curvebase&, const Curvebase&);
+		Domain( Curvebase&, Curvebase&, Curvebase&, Curvebase&);
 		Domain(const Domain&); //Copy constructor
-		Domain& operator =(Domain&);
-        Point Domain::operator()(int i, int j) const;
+		Domain& operator =(Domain&); //Assignment operator
+        Point operator()(int i, int j) const;
+		~Domain();
 		void generate_grid(int, int, int); // pass mxn grid and interpolation option. 1-linear, 2-whateverthatoptionalthingis
-		// ...
+		void print_grid();
 	private:
 		Curvebase *sides[4];
 		Point *corners[4];
@@ -18,7 +19,6 @@ class Domain{
 		bool check_consistency(); //Check if the grid is topologically equivalent to a square
 		double phi1(double); //transition function for grid generation phix(0) = 1, phix(1) = 0
 		double phi2(double); //transition function for grid generation phiy(1) = 1, phix(0) = 0
-		// ...
 };
 #include "Domain.cpp"
 #endif

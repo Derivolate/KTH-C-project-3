@@ -1,13 +1,6 @@
 #ifndef CURVEBASE_HPP
 #define CURVEBASE_HPP
 #include <functional>
-#include "Point.hpp"
-// #include "ASI.hpp"
-
-typedef std::function<double(double)> fctn;
-
-//typedef double (*fctn)(double);
-
 class Curvebase{ //ABSTRACT CLASS, NEEDS TO BE INHERITED
 	public:
         Curvebase(double, double);
