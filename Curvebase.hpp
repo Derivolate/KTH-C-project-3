@@ -25,10 +25,10 @@ class Curvebase{ //ABSTRACT CLASS, NEEDS TO BE INHERITED
 		double integrate(double); // arc length integral, has to be defined in base class, can be overwritten i guess?
 	
 	private:
-		double ASI_routine(fctn, double, double, double, double, double, double, double, double);
+		double ASI_routine(double, double, double, double, double, double, double, double);
 		double integrand(double); //Function to go in the integral of the standard definition of integrate
 		double simp(double,double,double,double,double);
-		double newton(fctn, fctn, double, double);
+		double newton(std::function<double(double)>,std::function<double(double)>, double, double);
 };
 
 #include "Curvebase.cpp"
