@@ -1,11 +1,13 @@
 #include "Curvebase.hpp"
+
 #include <cmath>
 #include <functional>
 #include <iostream>
 #include <functional>
-// using namespace std;
+
 using namespace std::placeholders;
-Curvebase::Curvebase(double a = 0.0, double b = 1.0) : pmin(a), pmax(b){
+
+Curvebase::Curvebase(double a, double b, bool dir) : pmin(a), pmax(b), rev(dir) {
     //TODO whattefuck should go in the nonderived curvebase constructor?
 }
 
@@ -13,7 +15,7 @@ Curvebase::~Curvebase(){
     //TODO standard destructor
 }
 
-double Curvebase::integrate(double p){
+double Curvebase::integrate(double p) {
     double tol = 1e-10; //TODO come up with better tollerance
     
     double a = pmin, c = p;
@@ -22,6 +24,7 @@ double Curvebase::integrate(double p){
     double I = simp(fa,fb,fc,a,c);
     return ASI_routine(a,b,c,tol,fa,fb,fc,I);
 }
+
 double Curvebase::integrand(double q){
     return sqrt(pow(dxp(q),2)+pow(dyp(q),2));
 }

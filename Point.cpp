@@ -1,22 +1,21 @@
-#include <math.h>
 #include "Point.hpp"
+#include <math.h>
 
+Point::Point(double xx, double yy) : x(xx), y(yy) { }
+Point::Point(Point const & Q): x(Q.x), y(Q.y) { }
 
-Point::Point(double xx = 0.0, double yy = 0.0) :x(xx), y(yy) { }
-Point::Point(const Point& Q): x(Q.x), y(Q.y) { }
-
-Point& Point::operator=(const Point& P) {
-    if (this != &P) {
+Point & Point::operator=(Point const & P) {
+    if (this != &P) { // nicht unbedingt notwendig -- wenn gleich überschreibt man halt -- billiger als der branch -- git aber Fälle, wo man aufpassen muss
         x = P.x; // equivalent: (*this).x = P.x;
         y = P.y;
     }
     return *this; // dereferencing!
 }
 
-const Point Point::operator+(const Point& Q) const{
+Point Point::operator+(const Point& Q) const{
     return Point(x+Q.x,y+Q.y);
 }
-const Point Point::operator-() const {
+Point Point::operator-() const {
     return Point(-x,-y);
 }
 

@@ -1,7 +1,10 @@
-#include "Domain.hpp"
-#include "Curvebase.hpp"
 #include <cmath>
 #include <iostream>
+#include <cstdio>
+#include "Domain.hpp"
+#include "Curvebase.hpp"
+#include <fstream>
+
 Domain::Domain(Curvebase& s1, Curvebase& s2, Curvebase& s3, Curvebase& s4) {
 	sides[0] = &s1;
 	sides[1] = &s2;
@@ -17,7 +20,7 @@ Domain::Domain(Curvebase& s1, Curvebase& s2, Curvebase& s3, Curvebase& s4) {
 
 
 Domain::~Domain() {
-	if (m_ > 0) {
+	if (m_ > 0 || n_ >0) {
 		delete [] x_;
 		delete [] y_;
 	}
@@ -35,9 +38,9 @@ double Domain::phi1(double q){return 1-q;}
 double Domain::phi2(double q){return q;}
 	
 void Domain::generate_grid(int m, int n, int c = 1){
-	if(m<1 or n<1) 
+	if(m<1 || n<1) 
 		// throw error
-	if(m_>0 or n_>0) { //if previous grid exists, reset grid points
+	if(m_>0 || n_>0) { //if previous grid exists, reset grid points
 		delete [] x_;
 		delete [] y_;
 	}
@@ -54,25 +57,37 @@ void Domain::generate_grid(int m, int n, int c = 1){
 			x_[i+j*(n+1)]=phi1(xi)*sides[3]->x(nu)+phi2(xi)*sides[1]->x(nu)
 						+ phi1(nu)*sides[0]->x(xi) + phi2(nu)*sides[2]->x(xi)
 						- phi1(xi)*phi1(nu)*sides[0]->x(0)
-						- phi1(xi)*phi2(nu)*sides[3]->x(1)
-						- phi2(xi)*phi1(nu)*sides[2]->x(0)
-						- phi2(xi)*phi2(nu)*sides[1]->x(1);
+						- phi1(xi)*phi2(nu)*sides[2]->x(0)
+						- phi2(xi)*phi1(nu)*sides[1]->x(0)
+						- phi2(xi)*phi2(nu)*sides[2]->x(1);
 			y_[i+j*(n+1)]=phi1(xi)*sides[3]->y(nu)+phi2(xi)*sides[1]->y(nu)
 						+ phi1(nu)*sides[0]->y(xi) + phi2(nu)*sides[2]->y(xi)
 						- phi1(xi)*phi1(nu)*sides[0]->y(0)
-						- phi1(xi)*phi2(nu)*sides[3]->y(1)
-						- phi2(xi)*phi1(nu)*sides[2]->y(0)
-						- phi2(xi)*phi2(nu)*sides[1]->y(1);
+						- phi1(xi)*phi2(nu)*sides[2]->y(0)
+						- phi2(xi)*phi1(nu)*sides[1]->y(0)
+						- phi2(xi)*phi2(nu)*sides[2]->y(1);
 		}
 	}
 }
 
 void Domain::print_grid(){
 	int ind;
+	std::ofstream strm("outfile.txt");
 	for(int i = 0; i<=n_; ++i){
 		for(int j = 0; j<=m_; ++j){
 			ind = j+i*(n_+1);
+			strm << "(" << x_[ind] << ",  " << y_[ind] << ")" << std::endl;
 			std::cout << "(" << x_[ind] << ",  " << y_[ind] << ")" << std::endl;
 		}
+	FILE *fx, *fy;
+	fx =fopen("../MatlabGrid/outfileX.bin","wb");
+	fy =fopen("../MatlabGrid/outfileY.bin","wb");
+	fwrite(x_,sizeof(double),(m_+1)*(n_+1),fx);
+	fwrite(y_,sizeof(double),(m_+1)*(n_+1),fy);
+	fclose(fx);fclose(fy);
 	}
 }
+
+
+         
+      
