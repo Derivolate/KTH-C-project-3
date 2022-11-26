@@ -91,7 +91,7 @@ double Curvebase::y(double s){
     double p0;
     //TODO make sure that these lambdas do not get declared every single  time
     auto ypf = [=](double x) -> double {return yp(x);};
-    auto dypf = [=](double x) -> double {return ypf(x);};
+    auto dypf = [=](double x) -> double {return dyp(x);};
 
     if (rev) p0 = newton(ypf, dypf,1.0-s, guess);
     else p0 = newton(ypf, dypf,s,guess);
