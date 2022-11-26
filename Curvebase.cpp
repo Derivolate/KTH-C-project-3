@@ -59,18 +59,27 @@ inline double Curvebase::simp(double fa,double fb,double fc,double a,double c)
 
 double Curvebase::newton(std::function<double(double)> f, std::function<double(double)> df, double guess, double tol = 1e-12){
     double x0(guess);
-    double dx(guess);
+    double dx(1.0);
     int i(0);
     int timeout(1e5);
     while(fabs(dx) > tol){
+        std::cout << "Hi" << std::endl;
         if  (i >= timeout){
             std::cout << "Runtime Error: Newton Method might not converge" << std::endl;
             return 0;
         }
-        dx = f(x0)/df(x0);
-        x0 -= dx;
-        ++i;
+        if (df(x0) != 0){
+            std::cout << "in iteration" << std::endl;
+            dx = f(x0)/df(x0);
+            x0 -= dx;
+            ++i;
+        }   
+        else {
+            std::cout << "X0 is ZEROOOO" << std::endl;
+            return x0;
+        }
     }
+    std::cout << "Newton done in: " << i << " iterations" << std::endl;
     return x0;
 }
 
