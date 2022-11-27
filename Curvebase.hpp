@@ -26,7 +26,7 @@ class Curvebase { //ABSTRACT CLASS, NEEDS TO BE INHERITED
 		double ASI_routine(double, double, double, double, double, double, double, double);
 		double integrand(double); //Function to go in the integral of the standard definition of integrate
 		double simp(double,double,double,double,double);
-		double newton(std::function<double(double)>,std::function<double(double)>, double, double);
+		double newton(double, double, double);
 };
 
 #endif

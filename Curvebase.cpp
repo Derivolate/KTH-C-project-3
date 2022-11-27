@@ -17,7 +17,6 @@ Curvebase::~Curvebase(){
 
 double Curvebase::integrate(double p) {
     double tol = 1e-10; //TODO come up with better tollerance
-    
     double a = pmin, c = p;
     double b = a+c/2;
     double fa = integrand(a), fb = integrand(b), fc = integrand(c);
@@ -57,53 +56,47 @@ inline double Curvebase::simp(double fa,double fb,double fc,double a,double c)
     return (fa+4*fb+fc)*(c-a)/6;
 }
 
-double Curvebase::newton(std::function<double(double)> f, std::function<double(double)> df, double guess, double tol = 1e-12){
-    double x0(guess);
-    double dx(1.0);
+double Curvebase::newton(double s, double guess, double tol = 1e-12){
+    double p(guess);
+    double dp(1.0);
     int i(0);
     int timeout(1e5);
-    while(fabs(dx) > tol){
-        std::cout << "Hi" << std::endl;
-        if  (i >= timeout){
-            std::cout << "Runtime Error: Newton Method might not converge" << std::endl;
-            return 0;
-        }
-        if (df(x0) != 0){
-            std::cout << "in iteration" << std::endl;
-            dx = f(x0)/df(x0);
-            x0 -= dx;
-            ++i;
-        }   
-        else {
-            std::cout << "X0 is ZEROOOO" << std::endl;
-            return x0;
-        }
+    double arclenth(integrate(pmax));
+
+    while(fabs(dp) > tol){
+        double dnmntr = sqrt(dxp(p)*dxp(p)+dyp(p)*dxp(p));
+        std::cout << "p_" << i << " = " << p << " -- Integrant = " << std::sqrt(dxp(p)*dxp(p)+dyp(p)*dxp(p)) << std::endl;
+        if (dnmntr == 0){//Handle if derivative is always zero -- horizonal/vertical boarder
+            std::cout << "Newton - Curve is a constant therefore no solving is needed" << std::endl;
+            return s;
+        } 
+        dp = (integrate(p) - s*arclenth)/dnmntr;
+        p -= dp;
+        ++i;
     }
-    std::cout << "Newton done in: " << i << " iterations" << std::endl;
-    return x0;
+    std::cout << "Newton - Finished in " << i << " iterations" << std::endl;
+    return p;
 }
 
 double Curvebase::x(double s){
-    double guess((pmin+pmax)/s);
+    double guess((pmin+pmax)/2);
     double p0;
-    //TODO make sure that these lambdas do not get declared every single  time
-    auto xpf = [=](double x) -> double {return xp(x);};
-    auto dxpf = [=](double x) -> double {return dxp(x);};
-    
-    if (rev) p0 = newton(xpf, dxpf,1.0-s, guess);
-    else p0 = newton(xpf, dxpf,s,guess);
+    if (!rev) p0 = newton(1.0-s, guess);
+    else {
+        std::cout << "Calling x newton with s = " << s << std::endl;
+        p0 = newton(s,guess);
+    }
     return xp(p0);
 }
 
 double Curvebase::y(double s){
-    double guess((pmin+pmax)/s);
+    double guess((pmin+pmax)/2);
     double p0;
-    //TODO make sure that these lambdas do not get declared every single  time
-    auto ypf = [=](double x) -> double {return yp(x);};
-    auto dypf = [=](double x) -> double {return dyp(x);};
-
-    if (rev) p0 = newton(ypf, dypf,1.0-s, guess);
-    else p0 = newton(ypf, dypf,s,guess);
+    if (!rev) p0 = newton(1.0-s, guess);
+    else {
+        std::cout << "Calling y newton with s = " << s << std::endl;
+        p0 = newton(s,guess);
+    }
     return yp(p0);
 }
 
