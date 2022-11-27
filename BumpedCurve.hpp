@@ -5,7 +5,6 @@
 
 class BumpedCurve : public Curvebase {
     public :
-        //a,b,rev,x0,y0,x1,x2,s1,s2,h
         BumpedCurve(double,double,bool,double,double,double,double,double,double,double,double);
     
     protected :

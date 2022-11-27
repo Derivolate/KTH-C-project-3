@@ -1,12 +1,10 @@
 #ifndef CURVEBASE_HPP
 #define CURVEBASE_HPP
 
-#include <functional>
-
-class Curvebase { //ABSTRACT CLASS, NEEDS TO BE INHERITED
+class Curvebase {
 	public:
         Curvebase(double, double, bool);
-		virtual ~Curvebase(); // -> destructor always has to be virtual
+		virtual ~Curvebase();
 		
 		double x(double); //Function of s, the arc length parameter
 		double y(double);
@@ -21,6 +19,7 @@ class Curvebase { //ABSTRACT CLASS, NEEDS TO BE INHERITED
 		virtual double dyp(double) = 0;
 		
 		double integrate(double); // arc length integral, has to be defined in base class, can be overwritten i guess?
+		void p_check(double);
 	
 	private:
 		double ASI_routine(double, double, double, double, double, double, double, double);

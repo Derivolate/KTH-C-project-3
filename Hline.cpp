@@ -5,23 +5,21 @@ Hline::Hline(double a, double b, bool dir, double x, double y, double len)
 }
 
 double Hline::xp(double p) {
-    if (!(pmin<=p and p<=pmax)){}
-        //throw error
+    p_check(p);
     return bx+(p-pmin)*(ex-bx)/(pmax-pmin);
 }
 
 double Hline::yp(double p) {
-    if (!(pmin<=p and p<=pmax)){}
-        //throw error
+    p_check(p);
     return by;
 }
 
 double Hline::dxp(double p) { 
-    if (!(pmin<=p and p<=pmax)){}
-        //throw error
+    p_check(p);
     return (ex-bx)/(pmax-pmin);
 }
 
 double Hline::dyp(double p) {
+    p_check(p);
     return 0;
 }

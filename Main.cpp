@@ -3,7 +3,6 @@
 #include "Hline.hpp"
 #include "Vline.hpp"
 #include "BumpedCurve.hpp"
-#include "Point.hpp"
 #include "Domain.hpp"
 
 using namespace std;

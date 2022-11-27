@@ -1,23 +1,18 @@
 #include <cmath>
 #include <iostream>
+#include <fstream>
 #include <cstdio>
 #include "Domain.hpp"
 #include "Curvebase.hpp"
-#include <fstream>
 
 Domain::Domain(Curvebase& s1, Curvebase& s2, Curvebase& s3, Curvebase& s4) {
 	sides[0] = &s1;
 	sides[1] = &s2;
 	sides[2] = &s3;
 	sides[3] = &s4;
-	//TODO consistency check
-	// if (~check_consistency()) 
-	// 	std::cout << "Grid is inconsistent" << std::endl;
-		// sides[0] = sides[1] = sides[2] = sides[3] = nullptr; //If thegrid is not consistent, unassign them, why not throw error?
 	m_ = n_ = 0;
 	x_ = y_ = nullptr;
 }
-
 
 Domain::~Domain() {
 	if (m_ > 0 || n_ >0) {
@@ -26,35 +21,38 @@ Domain::~Domain() {
 	}
 }
 
-Point Domain::operator()(int i, int j) const {
-	if (i < 0 || i >= m_ || j < 0 || j >= n_) {
-		exit(-1);
-	}
-	int ind = i+j*m_;
-	return Point(x_[ind],y_[ind]);
-}
-
-double Domain::phi1(double q){return 1-q;}
-double Domain::phi2(double q){return q;}
+inline double Domain::phi1(double q){return 1-q;}
+inline double Domain::phi2(double q){return q;}
 	
 void Domain::generate_grid(int m, int n, int c = 1){
-	if(m<1 || n<1) 
-		// throw error
+	if(m<1 || n<1)	{
+		std::cerr << "Grid size cannot be smaller than 1 in any dimension" << std::endl;
+		exit(1);
+	}
 	if(m_>0 || n_>0) { //if previous grid exists, reset grid points
 		delete [] x_;
 		delete [] y_;
 	}
+
 	x_ = new double[m*n]; 
 	y_ = new double[m*n];
 	double xi, nu;
 	double xtemp,ytemp;
 	m_ = m, n_= n;
-	double h1(1.0/(n-1)), h2(1.0/(m-1)); // (FORCE FLOATING POINT DIVISION)
-	for(int i(0); i<n; ++i){ //Vertical index, indicates the row
-		for(int j(0); j<m; ++j){ //Horizontal index, indicates the column
-			double xi(i*h1), nu(j*h2);
-			// if (c == 1) {double xi(i*h1),nu(j*h2); // equidistant s
-			// else if (c==2) double xi(1+(tanh(3)*((i*h1)-1))/tanh(3)),nu(1+(tanh(3)*((j*h2)-1))/tanh(3)); // stretched s position Task 5
+	
+	double h1(1.0/(n-1)), h2(1.0/(m-1)); // force floating point division
+
+	for(int i(0); i<n; ++i){ //Horizontal index, indicates the column
+		for(int j(0); j<m; ++j){ //Vertical index, indicates the row
+			
+			if (c == 1) { // equidistant s
+				xi = i*h1;
+				nu = j*h2;
+			} 
+			else if (c==2) { // stretched s
+				xi = i*h1;
+				nu = 1+(tanh(3)*((j*h2)-1))/tanh(3);
+			} 
 
 			xtemp = phi1(xi)*sides[3]->x(nu)+phi2(xi)*sides[1]->x(nu)
 						+ phi1(nu)*sides[0]->x(xi) + phi2(nu)*sides[2]->x(xi)
@@ -76,7 +74,6 @@ void Domain::generate_grid(int m, int n, int c = 1){
 }
 
 void Domain::print_grid(){
-	int ind;
 	std::ofstream strm("outfile.txt");
 	for(int ind = 0; ind<n_*m_; ++ind){
 		strm << "(" << x_[ind] << ",  " << y_[ind] << ")" << std::endl;
@@ -89,7 +86,3 @@ void Domain::print_grid(){
 	fwrite(y_,sizeof(double),m_*n_,fy);
 	fclose(fx);fclose(fy);
 }
-
-
-         
-      
