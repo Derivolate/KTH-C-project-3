@@ -47,6 +47,7 @@ void Domain::generate_grid(int m, int n, int c = 1){
 	x_ = new double[m*n]; 
 	y_ = new double[m*n];
 	double xi, nu;
+	double xtemp,ytemp;
 	m_ = m, n_= n;
 	double h1(1.0/(n-1)), h2(1.0/(m-1)); // (FORCE FLOATING POINT DIVISION)
 	for(int i(0); i<n; ++i){ //Vertical index, indicates the row
@@ -54,18 +55,22 @@ void Domain::generate_grid(int m, int n, int c = 1){
 			double xi(i*h1), nu(j*h2);
 			// if (c == 1) {double xi(i*h1),nu(j*h2); // equidistant s
 			// else if (c==2) double xi(1+(tanh(3)*((i*h1)-1))/tanh(3)),nu(1+(tanh(3)*((j*h2)-1))/tanh(3)); // stretched s position Task 5
-			x_[i+j*n]=phi1(xi)*sides[3]->x(nu)+phi2(xi)*sides[1]->x(nu)
+
+			xtemp = phi1(xi)*sides[3]->x(nu)+phi2(xi)*sides[1]->x(nu)
 						+ phi1(nu)*sides[0]->x(xi) + phi2(nu)*sides[2]->x(xi)
 						- phi1(xi)*phi1(nu)*sides[0]->x(0)
 						- phi1(xi)*phi2(nu)*sides[2]->x(0)
-						- phi2(xi)*phi1(nu)*sides[1]->x(0)
+						- phi2(xi)*phi1(nu)*sides[0]->x(1)
 						- phi2(xi)*phi2(nu)*sides[2]->x(1);
-			y_[i+j*n]=phi1(xi)*sides[3]->y(nu)+phi2(xi)*sides[1]->y(nu)
+			ytemp = phi1(xi)*sides[3]->y(nu)+phi2(xi)*sides[1]->y(nu)
 						+ phi1(nu)*sides[0]->y(xi) + phi2(nu)*sides[2]->y(xi)
 						- phi1(xi)*phi1(nu)*sides[0]->y(0)
 						- phi1(xi)*phi2(nu)*sides[2]->y(0)
-						- phi2(xi)*phi1(nu)*sides[1]->y(0)
+						- phi2(xi)*phi1(nu)*sides[0]->y(1)
 						- phi2(xi)*phi2(nu)*sides[2]->y(1);
+						
+			x_[i+j*n] = xtemp;
+			y_[i+j*n] = ytemp;
 		}
 	}
 }
@@ -73,19 +78,16 @@ void Domain::generate_grid(int m, int n, int c = 1){
 void Domain::print_grid(){
 	int ind;
 	std::ofstream strm("outfile.txt");
-	for(int i = 0; i<=n_; ++i){
-		for(int j = 0; j<=m_; ++j){
-			ind = j+i*(n_);
-			strm << "(" << x_[ind] << ",  " << y_[ind] << ")" << std::endl;
-			std::cout << "(" << x_[ind] << ",  " << y_[ind] << ")" << std::endl;
-		}
+	for(int ind = 0; ind<n_*m_; ++ind){
+		strm << "(" << x_[ind] << ",  " << y_[ind] << ")" << std::endl;
+		std::cout << "(" << x_[ind] << ",  " << y_[ind] << ")" << std::endl;
+	}
 	FILE *fx, *fy;
-	fx =fopen("../MatlabGrid/outfileX.bin","wb");
-	fy =fopen("../MatlabGrid/outfileY.bin","wb");
+	fx =fopen(".\\outfileX.bin","wb");
+	fy =fopen(".\\outfileY.bin","wb");
 	fwrite(x_,sizeof(double),m_*n_,fx);
 	fwrite(y_,sizeof(double),m_*n_,fy);
 	fclose(fx);fclose(fy);
-	}
 }
 
 

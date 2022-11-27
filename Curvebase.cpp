@@ -65,16 +65,16 @@ double Curvebase::newton(double s, double guess, double tol = 1e-12){
 
     while(fabs(dp) > tol){
         double dnmntr = sqrt(dxp(p)*dxp(p)+dyp(p)*dxp(p));
-        std::cout << "p_" << i << " = " << p << " -- Integrant = " << std::sqrt(dxp(p)*dxp(p)+dyp(p)*dxp(p)) << std::endl;
+        // std::cout << "p_" << i << " = " << p << " -- Integrant = " << std::sqrt(dxp(p)*dxp(p)+dyp(p)*dxp(p)) << std::endl;
         if (dnmntr == 0){//Handle if derivative is always zero -- horizonal/vertical boarder
-            std::cout << "Newton - Curve is a constant therefore no solving is needed" << std::endl;
+            // std::cout << "Newton - Curve is a constant therefore no solving is needed" << std::endl;
             return s;
         } 
         dp = (integrate(p) - s*arclenth)/dnmntr;
         p -= dp;
         ++i;
     }
-    std::cout << "Newton - Finished in " << i << " iterations" << std::endl;
+    // std::cout << "Newton - Finished in " << i << " iterations" << std::endl;
     return p;
 }
 
@@ -83,7 +83,7 @@ double Curvebase::x(double s){
     double p0;
     if (!rev) p0 = newton(1.0-s, guess);
     else {
-        std::cout << "Calling x newton with s = " << s << std::endl;
+        // std::cout << "Calling x newton with s = " << s << std::endl;
         p0 = newton(s,guess);
     }
     return xp(p0);
@@ -94,7 +94,7 @@ double Curvebase::y(double s){
     double p0;
     if (!rev) p0 = newton(1.0-s, guess);
     else {
-        std::cout << "Calling y newton with s = " << s << std::endl;
+        // std::cout << "Calling y newton with s = " << s << std::endl;
         p0 = newton(s,guess);
     }
     return yp(p0);
