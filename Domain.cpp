@@ -49,8 +49,8 @@ void Domain::generate_grid(int m, int n, int c = 1){
 	double xi, nu;
 	m_ = m, n_= n;
 	double h1(1.0/(n-1)), h2(1.0/(m-1)); // (FORCE FLOATING POINT DIVISION)
-	for(int i = 0; i<n; ++i){ //Vertical index, indicates the row
-		for(int j = 0; j<m; ++j){ //Horizontal index, indicates the column
+	for(int i(0); i<n; ++i){ //Vertical index, indicates the row
+		for(int j(0); j<m; ++j){ //Horizontal index, indicates the column
 			double xi(i*h1), nu(j*h2);
 			// if (c == 1) {double xi(i*h1),nu(j*h2); // equidistant s
 			// else if (c==2) double xi(1+(tanh(3)*((i*h1)-1))/tanh(3)),nu(1+(tanh(3)*((j*h2)-1))/tanh(3)); // stretched s position Task 5
