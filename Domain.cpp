@@ -2,14 +2,17 @@
 #include <iostream>
 #include <fstream>
 #include <cstdio>
+#include <string>
 #include "Domain.hpp"
 #include "Curvebase.hpp"
 
-Domain::Domain(Curvebase& s1, Curvebase& s2, Curvebase& s3, Curvebase& s4) {
+Domain::Domain(Curvebase& s1, Curvebase& s2, Curvebase& s3, Curvebase& s4, double tol) {
 	sides[0] = &s1;
 	sides[1] = &s2;
 	sides[2] = &s3;
 	sides[3] = &s4;
+	for(int i = 0;i<4;++i)
+		sides[i]->set_tol(tol);
 	m_ = n_ = 0;
 	x_ = y_ = nullptr;
 }
@@ -69,16 +72,22 @@ void Domain::generate_grid(int m, int n, int c = 1){
 	}
 }
 
-void Domain::print_grid(){
+void Domain::print_grid(bool bin, bool ascii, bool term, std::string path){
 	std::ofstream strm("outfile.txt");
 	for(int ind = 0; ind<n_*m_; ++ind){
-		strm << "(" << x_[ind] << ",  " << y_[ind] << ")" << std::endl;
-		std::cout << "(" << x_[ind] << ",  " << y_[ind] << ")" << std::endl;
+		if (ascii)
+			strm << "(" << x_[ind] << ",  " << y_[ind] << ")" << std::endl;
+		if (term)
+			std::cout << "(" << x_[ind] << ",  " << y_[ind] << ")" << std::endl;
 	}
-	FILE *fx, *fy;
-	fx =fopen("../MatlabGrid/outfileX.bin","wb");
-	fy =fopen("../MatlabGrid/outfileY.bin","wb");
-	fwrite(x_,sizeof(double),m_*n_,fx);
-	fwrite(y_,sizeof(double),m_*n_,fy);
-	fclose(fx);fclose(fy);
+	if (bin){
+		FILE *fx, *fy;
+		std::string xpath = path + "outfileX.bin";
+		std::string ypath = path + "outfileY.bin"; 
+		fx =fopen(xpath.c_str(),"wb");
+		fy =fopen(ypath.c_str(),"wb");
+		fwrite(x_,sizeof(double),m_*n_,fx);
+		fwrite(y_,sizeof(double),m_*n_,fy);
+		fclose(fx);fclose(fy);
+	}
 }

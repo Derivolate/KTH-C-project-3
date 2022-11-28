@@ -6,11 +6,9 @@ Vline::Vline(double a, double b, bool dir, double x, double y, double len)
 }
 
 double Vline::xp(double p){
-    p_check(p);
     return bx;
 }
 double Vline::yp(double p){
-    p_check(p);
     return by+(p-pmin)*(ey-by)/(pmax-pmin);
 }
 
@@ -19,6 +17,5 @@ double Vline::dxp(double p){
 }
 
 double Vline::dyp(double p){
-    p_check(p);
     return (ey-by)/(pmax-pmin);
 }

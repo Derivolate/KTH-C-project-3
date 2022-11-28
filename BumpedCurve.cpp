@@ -14,15 +14,13 @@ BumpedCurve::BumpedCurve(double a, double b, bool rev, double x0, double y0, dou
 
 double  BumpedCurve::xp(double p)
 {
-    p_check(p);
     return bx+(p-pmin)*(ex-bx)/(pmax-pmin);
 }
 
 double  BumpedCurve::yp(double p)
 {
-    p_check(p);
     double yval;
-    double xval = xp(p);
+    double xval(xp(p));
     if (xval<xc)
     {
         yval = -s1*(xval-x1);
@@ -36,17 +34,13 @@ double  BumpedCurve::yp(double p)
 
 double  BumpedCurve::dxp(double p)
 {
-    p_check(p);
-    if (!(pmin<=p and p<=pmax)){}
-        //throw error
     return (ex-bx)/(pmax-pmin);
 }
 
 double  BumpedCurve::dyp(double p)
 {
-    p_check(p);
     double sval, expval;
-    double xval = xp(p);
+    double xval(xp(p));
     if (xval<xc)
     {
         expval = exp(-s1*(xval-x1));

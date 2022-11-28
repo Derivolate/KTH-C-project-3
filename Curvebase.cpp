@@ -6,15 +6,19 @@ Curvebase::Curvebase(double a, double b, bool dir) : pmin(a), pmax(b), rev(dir) 
 
 Curvebase::~Curvebase(){}
 
+void Curvebase::set_tol(double tol)
+{
+    tollerance = tol;
+}
+
 double Curvebase::integrate(double p) {
-    double tol = 1e-12;
     // Calculate values to kickstart the algorithm
     double a = pmin, c = p;
     double b = a+c/2;
     double fa = integrand(a), fb = integrand(b), fc = integrand(c);
     double I = simp(fa,fb,fc,a,c);
     // Run the algorithm
-    return ASI_routine(a,b,c,tol,fa,fb,fc,I);
+    return ASI_routine(a,b,c,tollerance,fa,fb,fc,I);
 }
 
 
@@ -51,18 +55,22 @@ inline double Curvebase::simp(double fa,double fb,double fc,double a,double c)
     return (fa+4*fb+fc)*(c-a)/6;
 }
 
-double Curvebase::newton(double s, double guess, double tol = 1e-10){
+double Curvebase::newton(double s, double guess){
     double p(guess); //initial guess used to start Newtons method. 
     double dp(1.0);  //delta between the steps used to evaluate tolerance (can be improved by averaging over last x steps)
     int i(0); //iteration count to avoid non converging sequences
     int timeout(1e5); //timeout at which the newton method stops assuming no convergance
     double arclenth(integrate(pmax));
-    while(fabs(dp) > tol){ //begin newton iterations
+    while(fabs(dp) > tollerance){ //begin newton iterations
         dp = (integrate(p) - s*arclenth)/sqrt(dxp(p)*dxp(p)+dyp(p)*dyp(p));
         p -= dp;
         if (p<pmin){p = pmin;}
         else if(p>pmax){p = pmax;}
         ++i;
+    }
+    if (!(pmin<=p and p<=pmax)){
+        std::cerr<<"Value of p outside of allowed range"<<std::endl;
+        exit(1);
     }
     return p;
 }
@@ -81,12 +89,4 @@ double Curvebase::y(double s){
     if (!rev) p0 = newton(1.0-s, guess);
     else p0 = newton(s,guess);
     return yp(p0);
-}
-
-// Check if the value of p is within bounds, and throw an error if that's not the case
-void Curvebase::p_check(double p){
-    if (!(pmin<=p and p<=pmax)){
-        std::cerr<<"Value of p outside of allowed range"<<std::endl;
-        exit(1);
-    }
 }
