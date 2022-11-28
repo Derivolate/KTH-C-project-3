@@ -57,21 +57,11 @@ double Curvebase::newton(double s, double guess, double tol = 1e-12){
     int i(0);
     int timeout(1e5);
     double arclenth(integrate(pmax));
-    double denom;
     while(fabs(dp) > tol){
-        denom = sqrt(dxp(p)*dxp(p)+dyp(p)*dxp(p));
-        
-        //Handle if derivative is always zero -- horizonal/vertical boarder
-        if (denom == 0) return s;
-
-        dp = (integrate(p) - s*arclenth)/denom;
+        dp = (integrate(p) - s*arclenth)/sqrt(dxp(p)*dxp(p)+dyp(p)*dyp(p));
         p -= dp;
-        if (p<pmin){
-            p = pmin;
-        }else if(p>pmax){
-            p = pmax;
-        }
-
+        if (p<pmin){p = pmin;}
+        else if(p>pmax){p = pmax;}
         ++i;
     }
     return p;

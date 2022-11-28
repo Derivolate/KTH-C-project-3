@@ -22,7 +22,7 @@ int main(int argc, char **argv)
 
     Domain domain = Domain(border1,border2,border3,border4);
     
-    domain.generate_grid(50,20,2);
+    domain.generate_grid(20,50,2);
     domain.print_grid();
 
     cout << "end" << endl; 
