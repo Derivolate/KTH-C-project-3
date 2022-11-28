@@ -7,7 +7,7 @@ Curvebase::Curvebase(double a, double b, bool dir) : pmin(a), pmax(b), rev(dir) 
 Curvebase::~Curvebase(){}
 
 double Curvebase::integrate(double p) {
-    double tol = 1e-10;
+    double tol = 1e-12;
     // Calculate values to kickstart the algorithm
     double a = pmin, c = p;
     double b = a+c/2;
@@ -51,13 +51,13 @@ inline double Curvebase::simp(double fa,double fb,double fc,double a,double c)
     return (fa+4*fb+fc)*(c-a)/6;
 }
 
-double Curvebase::newton(double s, double guess, double tol = 1e-12){
-    double p(guess);
-    double dp(1.0);
-    int i(0);
-    int timeout(1e5);
+double Curvebase::newton(double s, double guess, double tol = 1e-10){
+    double p(guess); //initial guess used to start Newtons method. 
+    double dp(1.0);  //delta between the steps used to evaluate tolerance (can be improved by averaging over last x steps)
+    int i(0); //iteration count to avoid non converging sequences
+    int timeout(1e5); //timeout at which the newton method stops assuming no convergance
     double arclenth(integrate(pmax));
-    while(fabs(dp) > tol){
+    while(fabs(dp) > tol){ //begin newton iterations
         dp = (integrate(p) - s*arclenth)/sqrt(dxp(p)*dxp(p)+dyp(p)*dyp(p));
         p -= dp;
         if (p<pmin){p = pmin;}
